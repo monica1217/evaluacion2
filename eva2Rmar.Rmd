@@ -1,0 +1,144 @@
+---
+title: "Factores que determinan la presencia de *Didymosphenia geminata* en Chile"
+author: "Monica M. Albornoz Espinel"
+date: "4 de octubre de 2019"
+output: 
+ ioslides_presentation:
+  widescreen: true
+  incremental: true
+  logo: puc_logo.jpg
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(dismo)
+library(rJava) 
+library(sf)
+library(knitr)
+library(kableExtra)
+```
+
+
+## Introducción
+### *Didymosphenia geminata*
+<div style="float: left; widht: 90%">
+- Diatomea
+- Bentónica
+- Hemisferio Norte
+
+**Hábitat**
+
+- Ecosistemas oligotróficos
+- Sustratos rocosos
+</div>
+
+<div style="float: right; widht: 10%">
+![](1im.png)
+</div>
+
+## Introducción
+
+* Actividades antropicas -> Propagación de Didymo 
+
+**Didymo en Chile** - Futaleufu (2010), Region de Los Lagos 
+
+**Impactos**
+- Ecológicos (Bentonicos, Macroinvertebrados y Vertebrados)
+- Sociales, económicos y estéticos 
+
+![](i2a.png)
+
+**Objetivo:** 
+
+
+Determinar si la presencia de *Didimosphenia geminata* en Chile se encuentra asociada a parámetros físicoquímicos.
+
+
+## Métodos {.smaller}
+
+**Área de estudio**: 
+
+-Ríos (acuicultura y pesca recreativa)
+
+- 8 Regiones (Maule, Bío-Bío, La Araucanía, Los Ríos, Los Lagos, Aysén, Magallanes y Ñuble)
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+setwd("C:/Users/Moma/Documents/R2/")
+chile <- st_read("C:/Users/Moma/Documents/R2/Capas_Chile/cl_continental_geo/cl_continental_geo.shp")
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+ggplot() + geom_sf(data = chile, color="black", fill=NA, na.rm = F) + ggtitle("Area de estudio") + coord_sf()
+```
+
+
+## Métodos {.smaller}
+
+**Obtención de los datos y Análisis de datos**
+
+ - Salvo Pereira (2019)
+ - Durante las épocas de primavera-verano (2018) y otoño-invierno (2019)
+ - Variables:
+ NO2/NO3/Nt/Nkt/PO4/Pt/Si/Ca/Turbidez 
+ - Correlacionadas
+ - Modelos lineales - relación entre las variables independientes y la variable dependiente
+ - Evaluación de los modelos - AIC
+ 
+
+## Resultados 
+**Presencia del Didymo** 
+
+394 muestras - 364  presencia y 30 de ausencia de Didymo
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+puntos <- st_read("C:/Users/Moma/Documents/R2/punt.shp")
+```
+
+
+```{r}
+ggplot() + geom_sf(data = chile) + geom_sf(data=puntos,mapping = aes(colour = Crecimient), alpha=0.1)+ ggtitle("Presencia de Didymo") + theme_light()
+```
+
+## Resultados {.smaller}
+
+Al realizar varios modelos el mejor fue -> Presencia de Didymo con Fósforo
+
+con un AIC de 35.01814 y un p 9.825e-13
+
+```{r}
+data1 <- read.csv("punc2a.csv", sep=";", dec = ",", header=TRUE)
+
+data2<-data1 %>% rename("Ca"=Ca..mg.L., "PO4"=PO4..mg.L., "Pt"=PT..mg.L.,                     "NO3"=NO3..mg.L.,"NO2"=NO2..mg.L., "Nt"=NT..mg.L., "Nkt"=NKT..mg.L., "Sit"=Si.T..mg.L.,"Turbidez"=Turbiedad..NTU.,"Pres_Didymo"= Crecimiento.algal) %>% filter(     NO2>0, PO4>0, Pt>0, NO3>0, Nt>0, Nkt>0, Turbidez>0)
+
+
+D <- ggplot(data2, aes(x=Estado, y=Pt, colour=Didymo)) + geom_boxplot() + theme_classic()
+
+D
+```
+
+
+## 
+![](plag2.png)
+
+**¿Sucede lo mismo con otras diatomeas?**
+
+**Comportamiento del Didymo con el fósforo**
+
+
+
+## 
+![](th2.png)
+
+
+
+
